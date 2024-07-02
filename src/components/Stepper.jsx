@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 const Step = ({ step, onStep, handleNextStep }) => {
   const setBgColor = onStep >= step ? "bg-orange-600" : "bg-slate-300";
   return (

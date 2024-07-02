@@ -1,4 +1,4 @@
-import { createContext, useContext, useMemo, useReducer, useRef, useState } from "react";
+import { createContext, useContext, useReducer, useState } from "react";
 
 const AppContext = createContext(null);
 
@@ -37,10 +37,11 @@ const schema = {
 const AppProvider = ({ children }) => {
   const initialValue = JSON.parse(localStorage.getItem("user")) || schema;
   const [formData, dispatch] = useReducer(reducer, initialValue);
+  const steps = [1, 2, 3];
   const [step, setStep] = useState(1);
 
   return (
-    <AppContext.Provider value={{ step, setStep, formData, dispatch }}>
+    <AppContext.Provider value={{ step, setStep, steps, formData, dispatch }}>
       {children}
     </AppContext.Provider>
   );

@@ -13,8 +13,7 @@ const Form = ({ children }) => {
 };
 
 const Home = () => {
-  const steps = [1, 2, 3];
-  const { step, setStep, formData, dispatch } = useApp();
+  const { step, setStep, formData, dispatch, steps } = useApp();
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
 
