@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Post from "../components/Post";
 const Posts = () => {
   const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const fetchPosts = async () => {
     try {
@@ -13,7 +14,9 @@ const Posts = () => {
       }
       const { data } = await response.json();
       setPosts(data);
+      setLoading(false);
     } catch (error) {
+      alert("Error while fetching posts.");
       console.error("Error fetching data:", error);
     }
   };
@@ -25,11 +28,15 @@ const Posts = () => {
   return (
     <div className="rounded-lg bg-gray-50 p-7 text-gray-900 shadow-lg">
       <h1 className="mb-7 border-b pb-2 text-4xl font-bold">Posts</h1>
-      <div className="grid w-full grid-cols-1 gap-6 md:grid-cols-2 md:gap-8 lg:grid-cols-3 lg:gap-10">
-        {posts?.map((post) => (
-          <Post post={post} />
-        ))}
-      </div>
+      {loading ? (
+        <div>Loading...</div>
+      ) : (
+        <div className="grid w-full grid-cols-1 gap-6 md:grid-cols-2 md:gap-8 lg:grid-cols-3 lg:gap-10">
+          {posts?.map((post) => (
+            <Post post={post} />
+          ))}
+        </div>
+      )}
     </div>
   );
 };

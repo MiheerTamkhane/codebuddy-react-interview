@@ -1,11 +1,11 @@
 const Field = ({
   type,
-  label,
+  label = "",
   name,
   value,
   defaultValue,
   onChange,
-  options,
+  options = [],
   placeholder,
   required,
   checked,
@@ -25,7 +25,7 @@ const Field = ({
             onChange={onChange}
             placeholder={placeholder}
             required={required}
-            className="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+            className="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 sm:text-sm sm:leading-6"
           />
         );
       case "select":
@@ -36,7 +36,7 @@ const Field = ({
             defaultValue={defaultValue}
             onChange={onChange}
             required={required}
-            className="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+            className="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 sm:text-sm sm:leading-6"
           >
             <option value="">Select</option>
             {options.map((option) => (
@@ -54,7 +54,7 @@ const Field = ({
             checked={checked}
             onChange={onChange}
             required={required}
-            className="h-4 w-4 cursor-pointer rounded border-gray-300 text-indigo-600"
+            className="h-4 w-4 cursor-pointer rounded"
           />
         );
       default:

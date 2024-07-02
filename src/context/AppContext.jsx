@@ -1,9 +1,8 @@
 import { createContext, useContext, useMemo, useReducer, useRef, useState } from "react";
-import { validate } from "../utils";
+
 const AppContext = createContext(null);
 
 function reducer(state, action) {
-  console.log(action);
   switch (action.type) {
     case "emailId":
       return { ...state, emailId: action.payload };
@@ -51,7 +50,7 @@ const useApp = () => {
   const context = useContext(AppContext);
 
   if (context === undefined) {
-    throw new Error("Auth context error");
+    throw new Error("App context error");
   }
   return context;
 };

@@ -1,5 +1,4 @@
 export const validate = (formData, step, setErrors) => {
-  console.log({ inner: step });
   const newErrors = {};
   if (step === 1) {
     if (!formData.emailId) newErrors.emailId = "Email is required.";

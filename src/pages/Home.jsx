@@ -54,14 +54,16 @@ const Home = () => {
             navigate("/posts");
           }
         })
-        .catch((err) => console.log(err));
+        .catch((err) => {
+          alert("Something went wrong!");
+          console.error(err);
+        });
     }
   }
   const disabled = step === steps.length;
-  console.log({ step, errors, formData });
   return (
-    <div className="mx-auto max-w-6xl rounded-lg bg-gray-50 p-7 text-gray-900 shadow-lg">
-      <h2 className="mb-3  text-2xl">Welcome to the home page!</h2>
+    <div className="mx-auto max-w-6xl rounded-lg bg-gray-50 p-7 pt-5 text-gray-900 shadow-lg">
+      <h2 className="mb-4 text-2xl">Please fill the form!</h2>
       <div className="w-full">
         <Stepper steps={steps} onStep={step} handleNextStep={handleTabChange} />
 
