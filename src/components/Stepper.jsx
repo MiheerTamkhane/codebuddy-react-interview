@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useApp } from "../context/AppContext";
 // should not able to jumb directly on 3rd form.
 const Step = ({ step, onStep, handleNextStep }) => {
-  const bgColor = onStep >= step ? "bg-blue-500" : "bg-neutral-200";
+  const bgColor = onStep >= step ? "bg-orange-600" : "bg-slate-300";
   return (
     <li className={`group shrink basis-0  ${step !== 1 ? "flex-1" : ""}`}>
       <div className="min-w-7 min-h-7 inline-flex w-full items-center align-middle text-xs">

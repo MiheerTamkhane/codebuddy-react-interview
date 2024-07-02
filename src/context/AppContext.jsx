@@ -19,11 +19,13 @@ function reducer(state, action) {
       return { ...state, countryCode: action.payload };
     case "phoneNumber":
       return { ...state, phoneNumber: action.payload };
+    case "acceptTermsAndCondition":
+      return { ...state, acceptTermsAndCondition: action.payload };
     default:
       return state;
   }
 }
-const initialValue = {
+const schema = {
   emailId: "",
   password: "",
   firstName: "",
@@ -31,8 +33,10 @@ const initialValue = {
   address: "",
   countryCode: "",
   phoneNumber: "",
+  acceptTermsAndCondition: false,
 };
 const AppProvider = ({ children }) => {
+  const initialValue = JSON.parse(localStorage.getItem("user")) || schema;
   const [formData, dispatch] = useReducer(reducer, initialValue);
   const [step, setStep] = useState(1);
 

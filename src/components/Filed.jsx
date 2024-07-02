@@ -1,4 +1,16 @@
-const Field = ({ type, label, name, value, onChange, options, placeholder, required, checked }) => {
+const Field = ({
+  type,
+  label,
+  name,
+  value,
+  defaultValue,
+  onChange,
+  options,
+  placeholder,
+  required,
+  checked,
+  error,
+}) => {
   const renderField = () => {
     switch (type) {
       case "text":
@@ -21,10 +33,12 @@ const Field = ({ type, label, name, value, onChange, options, placeholder, requi
           <select
             name={name}
             value={value}
+            defaultValue={defaultValue}
             onChange={onChange}
             required={required}
             className="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
           >
+            <option value="">Select</option>
             {options.map((option) => (
               <option key={option.value} value={option.value} className="p-2">
                 {option.label}
@@ -52,10 +66,16 @@ const Field = ({ type, label, name, value, onChange, options, placeholder, requi
     <div className="mb-4">
       {label && (
         <label htmlFor={name} className="block text-sm font-medium text-gray-700">
-          {label} {required ? <span className="text-red-700">*</span> : null}
+          {label}{" "}
+          {required ? (
+            <span className="text-red-700">*</span>
+          ) : (
+            <span className="text-gray-400">(Optional)</span>
+          )}
         </label>
       )}
       {renderField()}
+      {error && <span className="ml-1 text-xs text-red-700">{error}</span>}
     </div>
   );
 };

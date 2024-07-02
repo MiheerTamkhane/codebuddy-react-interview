@@ -1,9 +1,12 @@
+import { useState } from "react";
 import Stepper from "../components/Stepper";
 import FormWrapper from "../components/FormWrapper";
 import Field from "../components/Filed";
+import Button from "../components/Button";
 import { useApp } from "../context/AppContext";
-import { useEffect, useReducer, useRef, useState } from "react";
 import { validate } from "../utils";
+import { API_URL } from "../mocks/handlers";
+import { useNavigate } from "react-router-dom";
 
 const Form = ({ children }) => {
   return <>{children}</>;
@@ -12,21 +15,55 @@ const Form = ({ children }) => {
 const Home = () => {
   const steps = [1, 2, 3];
   const { step, setStep, formData, dispatch } = useApp();
+  const [errors, setErrors] = useState({});
+  const navigate = useNavigate();
 
-  function handleSubmit(step) {
-    const value = validate(formData, 1);
-    if (value?.message !== "success") {
-      alert(value.message);
-      return;
+  function handleNext() {
+    if (validate(formData, step, setErrors)) {
+      handleSave();
+      setStep((prev) => prev + 1);
     }
-    setStep((prev) => step || prev + 1);
+  }
+
+  function handleBack() {
+    setStep((prev) => prev - 1);
+  }
+
+  function handleTabChange(currentStep) {
+    if (validate(formData, currentStep - 1, setErrors)) {
+      setStep(currentStep);
+    }
+  }
+
+  function handleSave() {
+    if (validate(formData, step, setErrors)) {
+      localStorage.setItem("user", JSON.stringify(formData));
+      alert("Form Saved.");
+    }
+  }
+
+  function handleSubmit() {
+    if (validate(formData, step, setErrors)) {
+      const body = { ...formData };
+      delete body["acceptTermsAndCondition"];
+
+      fetch(`${API_URL}/submit`, { method: "POST", body: JSON.stringify(body) })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data?.message === "Success") {
+            navigate("/posts");
+          }
+        })
+        .catch((err) => console.log(err));
+    }
   }
   const disabled = step === steps.length;
+  console.log({ step, errors, formData });
   return (
     <div className="mx-auto max-w-6xl rounded-lg bg-gray-50 p-7 text-gray-900 shadow-lg">
       <h2 className="mb-3  text-2xl">Welcome to the home page!</h2>
       <div className="w-full">
-        <Stepper steps={steps} onStep={step} handleNextStep={handleSubmit} />
+        <Stepper steps={steps} onStep={step} handleNextStep={handleTabChange} />
 
         <FormWrapper>
           <Form>
@@ -37,6 +74,7 @@ const Home = () => {
               required
               value={formData?.emailId}
               onChange={(e) => dispatch({ type: "emailId", payload: e.target.value })}
+              error={errors?.emailId}
             />
             <Field
               label={"Password"}
@@ -45,6 +83,7 @@ const Home = () => {
               required
               value={formData?.password}
               onChange={(e) => dispatch({ type: "password", payload: e.target.value })}
+              error={errors?.password}
             />
           </Form>
           <Form>
@@ -55,13 +94,14 @@ const Home = () => {
               value={formData?.firstName}
               required
               onChange={(e) => dispatch({ type: "firstName", payload: e.target.value })}
+              error={errors?.firstName}
             />
             <Field
               label={"Last Name"}
               type="text"
               placeholder="Doe"
               value={formData?.lastName}
-              required
+              required={false}
               onChange={(e) => dispatch({ type: "lastName", payload: e.target.value })}
             />
             <Field
@@ -71,6 +111,7 @@ const Home = () => {
               value={formData?.address}
               required
               onChange={(e) => dispatch({ type: "address", payload: e.target.value })}
+              error={errors?.address}
             />
           </Form>
           <Form>
@@ -80,46 +121,51 @@ const Home = () => {
               required
               value={formData?.countryCode}
               options={[
-                { value: "IN", label: "India" },
-                { value: "US", label: "USA" },
+                { value: "+91", label: "+91(India)" },
+                { value: "+1", label: "+1(America)" },
               ]}
               onChange={(e) => dispatch({ type: "countryCode", payload: e.target.value })}
+              error={errors?.countryCode}
             />
             <Field
               label={"Phone Number"}
               type="tel"
               placeholder="+919767..."
               value={formData?.phoneNumber}
+              defaultValue="+91"
               required
               onChange={(e) => dispatch({ type: "phoneNumber", payload: e.target.value })}
+              error={errors?.phoneNumber}
             />
-            <Field label={"Accept Terms And Condition"} type="checkbox" required />
+            <Field
+              label={"Accept Terms And Condition"}
+              type="checkbox"
+              required
+              checked={formData?.acceptTermsAndCondition}
+              onChange={(e) =>
+                dispatch({
+                  type: "acceptTermsAndCondition",
+                  payload: !formData?.acceptTermsAndCondition,
+                })
+              }
+              error={errors?.acceptTermsAndCondition}
+            />
           </Form>
         </FormWrapper>
 
         <div className="mx-auto mt-10 max-w-xs">
           <div className="flex gap-4">
-            <button
-              type="submit"
-              className="flex w-full justify-center rounded-md bg-orange-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-orange-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
+            <Button label={"Back"} onClick={handleBack} disabled={step === 1} />
+            <Button
+              label={disabled ? "Submit" : "Save & Next"}
               onClick={() => {
-                setStep((prev) => prev - 1);
+                if (disabled) {
+                  handleSubmit();
+                } else {
+                  handleNext();
+                }
               }}
-              disabled={step === 1}
-            >
-              Back
-            </button>
-            <button
-              type="submit"
-              className="flex w-full justify-center rounded-md bg-orange-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-orange-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-              onClick={() => {
-                console.log("called...");
-                handleSubmit();
-              }}
-              disabled={disabled}
-            >
-              Next
-            </button>
+            />
           </div>
         </div>
       </div>
