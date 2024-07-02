@@ -2,6 +2,16 @@ import { Icon } from "@iconify/react";
 import { Link } from "react-router-dom";
 
 const Posts = () => {
+  // async function onload() {
+  //   console.log("start..");
+  //   const data = await fetch("https://codebuddy.review/posts");
+  //   const res = await data.json();
+  //   console.log({ res });
+  // }
+  // useEffect(() => {
+  //   onload();
+  //   console.log("log");
+  // }, []);
   return (
     <div className="rounded-lg bg-gray-50 p-7 text-gray-900 shadow-lg">
       <h1 className="mb-7 text-4xl font-bold">Posts</h1>
