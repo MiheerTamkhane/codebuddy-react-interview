@@ -41,22 +41,23 @@ const Home = () => {
     }
   }
 
-  function handleSubmit() {
+  async function handleSubmit() {
     if (validate(formData, step, setErrors)) {
-      const body = { ...formData };
-      delete body["acceptTermsAndCondition"];
-
-      fetch(`${API_URL}/submit`, { method: "POST", body: JSON.stringify(body) })
-        .then((res) => res.json())
-        .then((data) => {
-          if (data?.message === "Success") {
-            navigate("/posts");
-          }
-        })
-        .catch((err) => {
-          alert("Something went wrong!");
-          console.error(err);
+      try {
+        const body = { ...formData };
+        delete body["acceptTermsAndCondition"];
+        const response = await fetch(`${API_URL}/submit`, {
+          method: "POST",
+          body: JSON.stringify(body),
         });
+        const data = await response.json();
+        if (data?.message === "Success") {
+          navigate("/posts");
+        }
+      } catch (err) {
+        alert("Something went wrong!");
+        console.error(err);
+      }
     }
   }
   const disabled = step === steps.length;
